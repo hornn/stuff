@@ -1,0 +1,124 @@
+updating port (installer) sync list:
+https://trac.macports.org/wiki/howto/PortTreeTarball
+
+jps - ps for java processes (used for single cluster/hadoop)
+should have:
+hadoop - 1 name node, 3 data node. 
+hbase - 1 hamster, 3 hregsionserver. main - for connecting with hbase.
+zookeeper - quorumpeermain.
+
+12493 QuorumPeerMain
+12794 HRegionServer
+12641 HRegionServer
+12566 HMaster
+12127 DataNode
+12022 NameNode
+12717 HRegionServer
+12344 DataNode
+12234 DataNode
+12843 Main
+
+newer version:
+48590 HRegionServer
+48791 Main
+48427 QuorumPeerMain
+48374 NodeManager
+48515 HMaster
+48218 NodeManager
+48666 HRegionServer
+47667 NameNode
+48016 DataNode
+47779 DataNode
+48742 HRegionServer
+47894 DataNode
+48143 ResourceManager
+48294 NodeManager
+
+
+Eclipse:
+* adding perforce to eclipse project:
+project->team->share project -> perforce.
+* search for file:
+cmd+shift+r 
+* java class decompiler: JD-Eclipse (JD-GUI)
+
+
+
+Logs for hadoop:
+in hadoop/conf/log4j.properties (1.2)
+in hadoop/etc/log4j.properties (2.0)
+Add this to log4j config:
+log4j.logger.com.emc.greenplum.gpdb.rest.resources = DEBUG
+log4j.logger.com.emc.greenplum.gpdb = DEBUG
+
+
+gdb:
+attach <pid> / gdp -p <pid>
+n (next)
+s (step)
+b <file name>:<line> (break)
+p <variable> (print)
+detach
+
+to get a process in a point we want:
+
+	volatile int i = 0;
+	while (i==0)
+	{
+
+	}
+
+run command, and attach to this process:
+gdb attach <pid>
+add break point inside the while loop:
+b pxfanalyze.c:79
+c
+run command again, and to get out of loop:
+set variable i = 1
+n
+
+
+#!/bin/bash
+for i in {1..5}
+do
+   echo "Welcome $i times"
+done
+
+for LINE in {1..2}; do echo $LINE; done
+
+configure java versions:
+alternatives --config java
+(choose jdk1.6 - not openjdk)
+
+[root@CentOS-64-1 main]# alternatives --remove jps /usr/java/jdk1.6.0_45/bin/jps 
+[root@CentOS-64-1 main]# alternatives --install /usr/bin/jps jps /usr/java/jdk1.6.0_45/bin/jps 2
+
+
+for i in {1..100}; do echo $i; a=`psql -d foobar -f /Users/hornn/GPSQL-1125/deflate.sql | grep rows`; echo $a; if [[ "$a" != "(11 rows)" ]]; then echo "boom"; break; fi; done
+
+# get processes that are with lsof > 400
+pids=`ps -ef | awk '{print $2}' | grep -v PID`; for i in $pids; do b=$(lsof -p $i | wc -l) ; if [[ $b -gt 400 ]]; then p=$(ps -p $i);echo $b, $i, $p; fi; done | sort -n
+
+Press Enter, ~, . one after the other to disconnect from a frozen session.
+
+unto one commit (before push!) in git:
+git reset --soft HEAD~1 
+
+to improve git performance
+git gc
+
+
+tinc:
+1. source greenplum.sh (set_greenplum_project <path> <branch>)
+2. go to tinc main branch and source tinc_env.sh
+3. go to tincrepo/main branch and source tincrepo_env.sh
+to run a test:
+go to the directory where the python test file is and run
+tinc.py discover . - discovers and runs all tests in this directory.
+to run a specific test:
+tinc.py <path to the python test file, with . instead of />.<name of the test as seen in discover>
+for example:
+ tinc.py resource_management.spillfiles.space_accounting.test_space_accounting.WorkfileSpaceAccountingTestCase.test_test_create_table_cancel
+where the test is under resource_management/spillfiles/space_accounting/test_space_accounting.py
+
+
