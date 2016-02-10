@@ -1,0 +1,35 @@
+single_cluster_home=/Users/hornn/single_cluster/singlecluster-pxfopt-build4664
+
+
+classpath=${single_cluster_home}/hadoop/etc/hadoop/
+
+function add_to_cp
+{
+  fullpath=$1
+  file=${fullpath##*/}
+  if [[ $classpath =~ $file  ]]
+  then
+ 		continue
+  fi
+  if [[ $file =~ "zookeeper-3.4.3-fatjar" ]]
+  then
+	continue
+  fi
+  classpath=${classpath}:$fullpath;
+}
+
+for f in $(find ${single_cluster_home} -name "*jar")
+do
+	add_to_cp $f;
+done
+
+# for regression test
+classpath=${classpath}:/Users/hornn/dev/hornn_mac/gpsql/private/isrard/gpsql/trunk/cdb-pg/src/test/regress/data/gpxf
+classpath=${classpath}:${single_cluster_home}/gpfusion/protobuf-appendix.jar
+
+
+classpath=${classpath}:${HADOOP_HOME}/conf/
+classpath=${classpath}:${single_cluster_home}/hive/conf/
+
+
+echo $classpath

@@ -1,0 +1,6 @@
+# compile
+javac -cp $(./return_classpath_single_cluster_20) CustomWritableSequence.java 
+# run: <hadoop path> <hadoop file name> <write/read> <rows number (for write)>
+java -cp $(./return_classpath_single_cluster_20) CustomWritableSequence /regress reg.txt 1
+java -cp $(./return_classpath_single_cluster_20) CustomWritableSequence /regress reg.txt 0
+

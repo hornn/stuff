@@ -1,0 +1,60 @@
+single_cluster_home=/Users/hornn/single_cluster/single_cluster-1.1.1-gphd-2.0
+
+SLF4JAPI=0
+SLF4JLOG=0
+classpath=""
+
+for f in $(find $single_cluster_home -name "*jar")
+do
+  # the IFs make sure that slf4j libraries ar only brought once, otherwise when envoking hadoop we get "bindings" errors and this fails regressions
+  if [[ $f =~ "zookeeper-3.4.3-fatjar" ]]
+  then
+ 		continue
+  fi
+  
+	if [[ $f =~ "slf4j-api" ]]
+	then
+		if [[ $SLF4JAPI -eq 0 ]]
+			then
+				SLF4JAPI=1;
+				classpath=${classpath}:$f;
+		fi
+		continue
+	fi 
+
+	if [[ $f =~ "slf4j-log" ]]
+	then
+		if [[ $SLF4JLOG -eq 0 ]]
+		then
+			SLF4JLOG=1;
+			classpath=${classpath}:$f;
+		fi
+		continue
+	fi
+
+  
+	classpath=${classpath}:$f;
+done
+
+# for regression test
+classpath=${classpath}:/Users/hornn/dev/hornn_mac/cdb2/private/isrard-gpfusion/cdb-pg/src/test/regress/data/gphdfs
+#classpath=${classpath}:/Users/hornn/dev/hornn_mac/cdb2/private/isrard-hadoop/gpfusion/branch-1.5-gphd-2.0/build/protobuf-appendix.jar
+classpath=${classpath}:${single_cluster_home}/gpfusion/protobuf-appendix.jar
+
+
+if [[ $HCATALOG_HOME ]]
+then
+    for f in $(find $HCATALOG_HOME -name "*jar")
+    do
+        classpath=${classpath}:$f;
+    done
+fi
+classpath=${classpath}:${HADOOP_HOME}/conf/
+classpath=${classpath}:${single_cluster_home}/hive/conf/
+
+
+export HCAT_HOME=${HCATALOG_HOME}
+export LIB_JARS=$HCAT_HOME/share/hcatalog/hcatalog-0.4.0.jar,$HIVE_HOME/lib/hive-metastore-0.9.0.jar,$HIVE_HOME/lib/libthrift-0.7.0.jar,$HIVE_HOME/lib/hive-exec-0.9.0.jar,$HIVE_HOME/lib/libfb303-0.7.0.jar,$HIVE_HOME/lib/jdo2-api-2.3-ec.jar,$HIVE_HOME/lib/slf4j-api-1.6.1.jar
+echo $classpath
+
+
