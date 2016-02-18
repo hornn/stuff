@@ -1,0 +1,109 @@
+
+PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin
+PATH=$PATH:/usr/local/git/bin:
+
+# Useful aliases:
+alias ll="ls -l"
+alias jps="jps | sort -k 2"
+#alias bt="/Users/nhorn/scripts/beep_test.sh"
+function bt()
+{
+echo -e "Done!" "\a" "\a" "\a"
+#echo "Done testing" "\007" "\007" "\007" # beep beep beep
+}
+alias p4diff="/Applications/p4merge.app/Contents/MacOS/p4merge"
+
+# kill postgres remains:
+alias killpostgres='killall postgres; ipcclean; rm -f /tmp/.s*'
+
+function maxof()
+{
+re='^[0-9]+$'
+if ! [[ $1 =~ $re ]]; then
+echo "Usage: maxof <open files threshold>"
+return 1
+fi
+pids=`ps -ef | awk '{print $2}' | grep -v PID`; 
+for i in $pids; do 
+	b=$(lsof -p $i | wc -l) ; 
+	if [[ $b -gt $1 ]]; then 
+		p=$(ps -p $i);
+		echo $b, $i, $p; 
+	fi; 
+done | sort -n
+}
+
+
+# vm 
+alias ssh_vm="ssh hornn@vm-centos64"
+
+# beep test:
+function beep_test()
+{
+
+$*
+echo -e "Done!" "\a" "\a" "\a"
+#echo "Done testing" "\007" "\007" "\007" # beep beep beep
+
+}
+
+
+alias gitundo='git reset --soft HEAD~1'
+
+### Unifi ###
+# active virtual env:
+alias activate='source ~/dev/unifi_virtenv/bin/activate'
+# start/stop postgres
+alias start_postgres='pg_ctl -D /usr/local/var/postgres/ -l /usr/local/var/postgres/server.log start'
+alias stop_postgres='pg_ctl -D /usr/local/var/postgres/ stop'
+# start/stop hdfs
+alias start_hdfs='/usr/local/Cellar/hadoop/2.7.2/sbin/start-dfs.sh'
+alias stop_hdfs='/usr/local/Cellar/hadoop/2.7.2/sbin/stop-dfs.sh'
+# start/stop yarn
+alias start_yarn='/usr/local/Cellar/hadoop/2.7.2/sbin/start-yarn.sh'
+alias stop_yarn='/usr/local/Cellar/hadoop/2.7.2/sbin/stop-yarn.sh'
+# start hive
+alias start_hive='hiveserver2 &'
+# stop hive
+function stop_hive()
+{
+	echo "killing hiveserver2..."
+	ps -ef | grep HiveServer2 | awk '{print $2}' | xargs kill -9 
+}
+
+# start all (postgres + hdfs + yarn + hiveserver2)
+function start_all()
+{
+	start_postgres
+	start_hdfs
+	start_yarn
+	start_hive
+}
+function stop_all()
+{
+	stop_postgres
+	stop_hdfs
+	stop_yarn
+	stop_hive
+}
+
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/
+export JDK7_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/
+
+export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.2/libexec/
+export HADOOP_VERSION="2.7.2"
+export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.2/libexec/etc/hadoop/
+export HIVE_HOME=/usr/local/Cellar/hive/1.2.1/libexec/
+export HIVE_CONF_DIR=/usr/local/Cellar/hive/1.2.1/libexec/conf/
+#export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/opt/cloudera/hiveodbc/lib/universal:/usr/local/opt/unixodbc/lib/libodbc
+
+export BOOST_PYTHON="boost_python-mt"
+export PATH=/opt/solr/bin:$PATH
+
+# docker params
+export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=/Users/nhorn/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
+
+
+
