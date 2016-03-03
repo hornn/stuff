@@ -76,6 +76,7 @@ function start_all()
 {
 	start_postgres
 	start_hdfs
+	hdfs dfsadmin -safemode wait
 	start_yarn
 	start_hive
 }
@@ -87,6 +88,16 @@ function stop_all()
 	stop_hive
 }
 
+# install, start, stop unifi
+alias unifi_install_default='rm /Users/nhorn/dev/unifing/services/data-integration/unifi_www/unifi_www/settings.py ; rm /Users/nhorn/dev/unifing/ext/redis/3.0.1/dump.rdb ; /Users/nhorn/dev/unifing/scripts/sbin/unifi_install --dbhost=127.0.0.1 --dbport=5432 --dbuser=unifi --dbpass='\'''\'' --dbname=unifi --unifiuser=unifi --unifipass=unifi --unifiemail=noa@unifisoftware.com'
+alias unifi_install_demo='cd /Users/nhorn/dev/unifing/demo ; python setup.py --unifiuser=unifi --unifipass=unifi --all; cd -'
+alias unifi_reinstall='unifi_stop ; dropdb unifi ; unifi_install_default ; unifi_start ; unifi_install_demo'
+alias unifi_restart='unifi_stop;unifi_start'
+alias unifi_start='/Users/nhorn/dev/unifing/scripts/sbin/unifi_start'
+alias unifi_status='/Users/nhorn/dev/unifing/scripts/sbin/unifi_status'
+alias unifi_stop='/Users/nhorn/dev/unifing/scripts/sbin/unifi_stop'
+
+
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/
 export JDK7_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/
 
@@ -96,6 +107,8 @@ export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.2/libexec/etc/hadoop/
 export HIVE_HOME=/usr/local/Cellar/hive/1.2.1/libexec/
 export HIVE_CONF_DIR=/usr/local/Cellar/hive/1.2.1/libexec/conf/
 #export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/opt/cloudera/hiveodbc/lib/universal:/usr/local/opt/unixodbc/lib/libodbc
+export SPARK_HOME=/usr/local/spark
+export PATH=${SPARK_HOME}/bin:$PATH
 
 export BOOST_PYTHON="boost_python-mt"
 export PATH=/opt/solr/bin:$PATH
@@ -105,5 +118,30 @@ export DOCKER_HOST=tcp://192.168.59.103:2376
 export DOCKER_CERT_PATH=/Users/nhorn/.boot2docker/certs/boot2docker-vm
 export DOCKER_TLS_VERIFY=1
 
+# run gcloud instance
+function gcloud_run()
+{
+  if [[ "$1" == "" ]]; then
+    echo "Usage: gcloud_run <instance_name>"
+    return 1
+  fi
+  instance_name=$1
+  echo "starting gcloud instance $instance_name..."
+  nohup /Users/nhorn/dev/unifing/cloud/gcloud/run.sh --name $instance_name --keep-running > $instance_name.out &
+}
+function gcloud_ssh()
+{
+  if [[ "$1" == "" ]]; then
+    echo "Usage: gcloud_ssh <instance_name>"
+    return 1
+  fi
+  instance_name=$1
+  gcloud compute ssh $instance_name
+}
 
 
+# The next line updates PATH for the Google Cloud SDK.
+source '/Users/nhorn/gcloud/google-cloud-sdk/path.bash.inc'
+
+# The next line enables shell command completion for gcloud.
+source '/Users/nhorn/gcloud/google-cloud-sdk/completion.bash.inc'
