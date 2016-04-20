@@ -49,6 +49,10 @@ echo -e "Done!" "\a" "\a" "\a"
 
 
 alias gitundo='git reset --soft HEAD~1'
+export GITAWAREPROMPT=~/.bash/git-aware-prompt
+source "${GITAWAREPROMPT}/main.sh"
+export PS1="\u@\h \W \[$txtcyn\]\$git_branch\[$txtred\]\$git_dirty\[$txtrst\]\$ "
+source ~/.bash/git-completion.bash
 
 ### Unifi ###
 # active virtual env:
@@ -137,6 +141,16 @@ function gcloud_ssh()
   fi
   instance_name=$1
   gcloud compute ssh $instance_name
+}
+function gcloud_tag()
+{
+  if [[ "$1" == "" ]] || [[ "$2" == "" ]] ; then
+    echo "Usage: gcloud_tag <instance_name> <tag_name, e.g. oauth>"
+    return 1
+  fi
+  instance_name=$1
+  tag_name=$2
+  gcloud compute instances add-tags $instance_name --tags $tag_name
 }
 
 
