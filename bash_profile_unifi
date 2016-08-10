@@ -1,6 +1,7 @@
 
 PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin
 PATH=$PATH:/usr/local/git/bin:/usr/local/opt/sbt/bin:
+export PATH=/usr/local/mysql/bin:$PATH
 
 # Useful aliases:
 alias ll="ls -l"
@@ -138,12 +139,16 @@ export DOCKER_TLS_VERIFY=1
 function gcloud_run()
 {
   if [[ "$1" == "" ]]; then
-    echo "Usage: gcloud_run <instance_name>"
+    echo "Usage: gcloud_run <instance_name> [options]"
     return 1
   fi
   instance_name=$1
+  options=''
+  if [[ ! "$2" == "" ]]; then
+    options=$2
+  fi
   echo "starting gcloud instance $instance_name..."
-  nohup /Users/nhorn/dev/unifing/cloud/gcloud/run.sh --name $instance_name --keep-running > $instance_name.out &
+  nohup /Users/nhorn/dev/unifing/cloud/gcloud/run.sh --name $instance_name $options --keep-running > $instance_name.out &
 }
 function gcloud_ssh()
 {
