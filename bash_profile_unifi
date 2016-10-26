@@ -97,7 +97,8 @@ function stop_all()
 alias unifi_start='/Users/nhorn/dev/unifing/scripts/sbin/unifi_start --executor-mode local'
 alias unifi_status='/Users/nhorn/dev/unifing/scripts/sbin/unifi_status'
 alias unifi_stop='/Users/nhorn/dev/unifing/scripts/sbin/unifi_stop'
-function unifi_restart() {
+alias unifi_restart='/Users/nhorn/dev/unifing/scripts/sbin/unifi_restart'
+function unifi_restart_old() {
   stop_params=''
   stop_list='--all --celery --solr --discovery --executor --access --integration --redis'
   for var in "$@"; do
@@ -111,6 +112,7 @@ function unifi_restart() {
   unifi_start $@;
 }
 
+alias unifi_build='gradle clean build --parallel --max-workers=4; bt'
 alias unifi_install_default='rm /Users/nhorn/dev/unifing/services/data-integration/unifi_www/unifi_www/settings.py ; rm /Users/nhorn/dev/unifing/ext/redis/3.0.1/dump.rdb ; /Users/nhorn/dev/unifing/scripts/sbin/unifi_install --dbhost=127.0.0.1 --dbport=5432 --dbuser=unifi --dbpass='\'''\'' --dbname=unifi --unifiuser=unifi --unifipass=unifi --unifiemail=noa@unifisoftware.com --unififirstname Noa --unifilastname Horn'
 alias unifi_install_demo='cd /Users/nhorn/dev/unifing/demo ; python setup.py --unifiuser=unifi --unifipass=unifi --all; cd -'
 alias unifi_reinstall='unifi_stop ; dropdb unifi ; unifi_install_default ; unifi_start ; unifi_install_demo'
@@ -157,7 +159,7 @@ function gcloud_ssh()
     return 1
   fi
   instance_name=$1
-  gcloud compute ssh $instance_name
+  gcloud compute ssh $instance_name --zone us-east1-b
 }
 function gcloud_tag()
 {
