@@ -133,7 +133,7 @@ if [[ "$1" == "" ]]; then
 fi
 keyword=$1
 gototest
-(set -x; python regression.py --keyword $keyword --pytest-args='-s' --keep-changes)
+(set -x; python regression.py --keyword $keyword --pytest-args='-s' --keep-changes --extended)
 cd -
 }
 
