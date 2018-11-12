@@ -119,8 +119,9 @@ function unifi_restart_old() {
 
 alias unifi_build='gradle clean && gradle build --parallel --max-workers=4 -Pfastpack=true; bt'
 alias unifi_build_offline='gradle clean && gradle build --parallel --max-workers=4 -Pfastpack=true --offline; bt'
-alias unifi_install_default='rm /Users/nhorn/dev/unifing/services/data-integration/unifi_www/unifi_www/settings.py ; rm /Users/nhorn/dev/unifing/ext/redis/3.0.1/dump.rdb ; /Users/nhorn/dev/unifing/scripts/sbin/unifi_install --dbhost=127.0.0.1 --dbport=5432 --dbuser=unifi --dbpass='\'''\'' --dbname=unifi --unifiuser=unifi --unifipass=unifi --unifiemail=noa@unifisoftware.com --unififirstname Noa --unifilastname Horn --install-missing-deps'
-alias unifi_install_demo='cd /Users/nhorn/dev/unifing/demo ; python setup.py --unifiuser=unifi --unifipass=unifi --all; cd -'
+alias unifi_clean_cache='rm -r /Users/nhorn/dev/unifing/services/data-integration/unifi_www/datai/static/angular/.cache/'
+alias unifi_install_default='rm /Users/nhorn/dev/unifing/services/data-integration/unifi_www/unifi_www/settings.py ; rm /Users/nhorn/dev/unifing/ext/redis/3.0.1/dump.rdb ; /Users/nhorn/dev/unifing/scripts/sbin/unifi_install --dbhost=127.0.0.1 --dbport=5432 --dbuser=unifi --dbpass='\'''\'' --dbname=unifi --unifiuser=unifi --unifipass=unifiU1! --unifiemail=noa@unifisoftware.com --unififirstname Noa --unifilastname Horn --install-missing-deps'
+alias unifi_install_demo='cd /Users/nhorn/dev/unifing/demo ; python setup.py --unifiuser=unifi --unifipass=unifiU1! --all; cd -'
 alias unifi_reinstall='unifi_stop ; dropdb unifi ; unifi_install_default ; unifi_start ; unifi_install_demo'
 alias gotoapi='cd /Users/nhorn/dev/unifing/services/data-integration/unifi_www/'
 alias gotobase='cd /Users/nhorn/dev/unifing/'
@@ -137,6 +138,7 @@ gototest
 cd -
 }
 alias unifi_log='/Users/nhorn/dev/unifing/scripts/sbin/unifi_log'
+alias curlaccess="psql unifi -c \"select key from authtoken_token\" -t | xargs -I % echo \"curl -H \\\"Authorization: Token\" %\\\""
 
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/
 export JDK7_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/
@@ -144,8 +146,8 @@ export JDK7_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home
 export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.2/libexec/
 export HADOOP_VERSION="2.7.2"
 export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.2/libexec/etc/hadoop/
-export HIVE_HOME=/usr/local/Cellar/hive/1.2.1/libexec/
-export HIVE_CONF_DIR=/usr/local/Cellar/hive/1.2.1/libexec/conf/
+export HIVE_HOME=/usr/local/Cellar/hive/2.1.0/libexec/
+export HIVE_CONF_DIR=/usr/local/Cellar/hive/2.1.0/libexec/conf/
 #export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/opt/cloudera/hiveodbc/lib/universal:/usr/local/opt/unixodbc/lib/libodbc
 export SPARK_HOME=/usr/local/spark
 export PATH=${SPARK_HOME}/bin:$PATH
