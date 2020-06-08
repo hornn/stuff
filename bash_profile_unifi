@@ -142,6 +142,7 @@ cd -
 }
 alias unifi_log='/Users/nhorn/dev/unifing/scripts/sbin/unifi_log'
 alias curlaccess="psql unifi -c \"select key from authtoken_token\" -t | xargs -I % echo \"curl -H \\\"Authorization: Token\" %\\\""
+export USE_ADAPTER_CACHE=true
 
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/
 export JDK7_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/
