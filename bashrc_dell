@@ -158,6 +158,19 @@ source ~/.bash/git-completion.bash
 
 export VISUAL=vim 
 
+function fix_display()
+{
+# intern - laptop screen. extern- monitor
+intern=eDP-1
+extern=DP-3
+
+if xrandr | grep "$extern disconnected"; then
+    xrandr --output "$extern" --off --output "$intern" --mode 1920x1080
+else
+    xrandr --output "$intern" --off --output "$extern" --auto
+fi
+}
+
 . ~/.unifi_bashrc
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
