@@ -111,12 +111,18 @@ function unifi_restart_old() {
   unifi_start $@;
 }
 
+# gradle properties - equivalent to ./gradlew build -PwithDemoDirectory -PwithTestDirectory
+export ORG_GRADLE_PROJECT_withDemoDirectory=somevalue
+export ORG_GRADLE_PROJECT_withTestDirectory=somevalue
+
 alias unifi_build='unifi_stop && gotobase; ./gradlew --stop; ./gradlew clean && ./gradlew build --parallel --max-workers=4 -Pfastpack=true; cd -; bt'
+alias unifi_build_catalog='unifi_stop && gotobase; ./gradlew --stop; ./gradlew clean && ./gradlew build -Pproduct=catalog --parallel --max-workers=4 -Pfastpack=true; cd -; bt'
+alias unifi_build_managed='unifi_stop && gotobase; ./gradlew --stop; ./gradlew clean && ./gradlew build -Pmanaged --parallel --max-workers=4 -Pfastpack=true; cd -; bt'
 alias unifi_build_offline='unifi_stop && gradlew clean && gradlew build --parallel --max-workers=4 -Pfastpack=true --offline; bt'
 alias unifi_clean_cache='cd /home/nhorn/dev/unifing/services/data-integration/unifi_www/datai/static/angular/; rm -r .cache/ node_modules/ dist/ package-lock.json; cd -'
 alias unifi_install_default='rm /home/nhorn/dev/unifing/services/data-integration/unifi_www/unifi_www/settings.py ; rm /home/nhorn/dev/unifing/ext/redis/3.0.1/dump.rdb ; /home/nhorn/dev/unifing/scripts/sbin/unifi_install --dbhost=127.0.0.1 --dbport=5432 --dbuser=unifi --dbpass='\'''\'' --dbname=unifi --chost localhost --cport 9042 --cuser cassandra --cpass cassandra --unifiuser=unifi --unifipass=unifiU1! --unifiemail=noa@unifisoftware.com --unififirstname Noa --unifilastname Horn --install-missing-deps'
-alias unifi_install_demo='cd /home/nhorn/dev/unifing ; python -m demo.setup --unifiuser=unifi --unifipass=unifiU1! --all; cd -'
-#alias unifi_install_demo='cd /home/nhorn/dev/unifing/demo ; python setup.py --unifiuser=unifi --unifipass=unifiU1! --db --hdfs --s3 --azure-blob --gs --service; cd -'
+#alias unifi_install_demo='cd /home/nhorn/dev/unifing ; python -m demo.setup --unifiuser=unifi --unifipass=unifiU1! --all; cd -'
+alias unifi_install_demo='cd /home/nhorn/dev/unifing ; python -m demo.setup --unifiuser=unifi --unifipass=unifiU1! --db --hdfs --s3 --azure-blob --gs --service; cd -'
 alias unifi_reinstall='unifi_stop ; dropdb unifi ; cqlsh -u cassandra -p cassandra --execute "drop keyspace if exists janus" ; unifi_install_default ; unifi_start ; unifi_install_demo'
 alias gotoapi='cd /home/nhorn/dev/unifing/services/data-integration/unifi_www/'
 alias gotobase='cd /home/nhorn/dev/unifing/'
@@ -135,5 +141,9 @@ cd -
 alias unifi_log='/home/nhorn/dev/unifing/scripts/sbin/unifi_log'
 alias curlaccess="psql unifi -c \"select key from authtoken_token\" -t | xargs -I % echo \"curl -H \\\"Authorization: Token\" %\\\""
 
+alias ssh_ums='ssh -i ~/dev/unifi-managed-service/secrets/noa-stage_priv unifi@noa.dev.boomi-dcp.com'
+export AWS_PROFILE=boomi-identity
+
+alias vpn_red='sudo openvpn --config /home/nhorn/Documents/client.ovpn'
 
 ####################################################
